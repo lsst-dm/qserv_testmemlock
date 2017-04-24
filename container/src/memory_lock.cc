@@ -11,8 +11,6 @@
 #include <unistd.h>
 #include <iostream>
 
-using namespace std;
-
 void display_memlock()
 {
     std::string filename;
@@ -23,14 +21,14 @@ void display_memlock()
     filename.append(std::to_string(::getpid()));
     filename.append("/status");
 
-    ifstream in(filename.c_str());
+    std::ifstream in(filename.c_str());
     if( in.is_open())
     {
         while( getline(in,line) )
         {
             if( line.find(keyword) != std::string::npos )
             {
-                cerr <<"memory_lock: kernel value is " << line <<endl;
+                std::cerr <<"memory_lock: kernel interface (" << filename << ") returns: " << line << std::endl;
             }
         }
     }
@@ -74,8 +72,8 @@ int fmtBytes(long long val, char *buff, int bsz)
 
 void Usage(const char *msg)
 {
-    if (msg) cerr <<"memory_lock: " << msg <<endl;
-    cerr <<"Usage: memory_lock [-i] <filename>" <<endl;
+    if (msg) std::cerr <<"memory_lock: " << msg << std::endl;
+    std::cerr <<"Usage: memory_lock [-i] <filename>" << std::endl;
     exit (msg ? 1 : 0);
 }
 
@@ -101,7 +99,7 @@ int main(int argc, char **argv)
 // Open the file and get its size
 //
     if ((fd = open(theArg, O_RDONLY)) < 0 || fstat(fd, &buf) < 0)
-    {   cerr <<"memory_lock: " <<strerror(errno) <<" opening " << theArg <<endl;
+    {   std::cerr <<"memory_lock: " <<strerror(errno) <<" opening " << theArg << std::endl;
         exit(8);
     }
 
@@ -109,7 +107,7 @@ int main(int argc, char **argv)
 //
     theFile = (char *)mmap(0, buf.st_size, PROT_READ, MAP_SHARED, fd, 0);
     if (theFile == (char *)-1)
-    {   cerr <<"memory_lock: mmap " <<argv[1] <<" failed; " <<strerror(errno) <<endl;
+    {   std::cerr <<"memory_lock: mmap " <<argv[1] <<" failed; " <<strerror(errno) << std::endl;
         exit(8);
     }
 
@@ -120,14 +118,14 @@ int main(int argc, char **argv)
 // Lock the memory
 //
     if (mlock(theFile, buf.st_size))
-    {   cerr <<"memory_lock: mlock " <<argv[1] <<" failed; " <<strerror(errno) <<endl;
+    {   std::cerr <<"memory_lock: mlock " <<argv[1] <<" failed; " <<strerror(errno) << std::endl;
         exit(8);
     }
 
 // Indicate what we did
 //
     fmtBytes(buf.st_size, buff, sizeof(buff));
-    cerr <<"memory_lock: " <<buf.st_size <<" bytes (" <<buff <<") locked" <<endl;
+    std::cerr <<"memory_lock: " <<buf.st_size <<" bytes (" <<buff <<") locked" << std::endl;
 
     display_memlock();
 
@@ -135,8 +133,8 @@ int main(int argc, char **argv)
 //
     if (dowait)
     {
-        cerr <<"memory_lock: Hit enter to finish up... ";
-        cin.get();
+        std::cerr <<"memory_lock: Hit enter to finish up... ";
+        std::cin.get();
     }
 
 
