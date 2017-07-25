@@ -9,5 +9,9 @@ set -e
 
 DIR=$(cd "$(dirname "$0")"; pwd -P)
 
-g++ -std=c++11 "$DIR"/memory_lock.cc -o "$DIR"/memory_lock
+FILES=$(find "$DIR" -name "*.cc")
 
+for f in $FILES; do
+    OUT=$(basename "$f" .cc)
+    g++ -std=c++11 "$f" -o "$DIR/$OUT"
+done

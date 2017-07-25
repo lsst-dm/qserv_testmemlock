@@ -5,7 +5,7 @@ MAINTAINER Fabrice Jammes <fabrice.jammes@in2p3.fr>
 # each Dockerfile update
 RUN apt-get -y update && \
     apt-get -y install apt-utils && \
-    apt-get -y install g++ vim && \
+    apt-get -y install g++ lsof vim && \
     apt-get -y upgrade && \
     apt-get -y clean
 
@@ -24,4 +24,4 @@ WORKDIR $workdir/
 
 RUN ./build.sh
 
-CMD ./run.sh
+ENTRYPOINT ["./run.sh"]
